@@ -2,7 +2,7 @@ pipeline {
     agent none
  
     environment {
-        SLACK_CHANNEL = '#test_notification'
+        SLACK_CHANNEL = '#security'
     }
  
     stages {
