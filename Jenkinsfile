@@ -39,5 +39,3 @@ node {
 
      notifySlack("${currentBuild.currentResult}", "#00FF00")
      }
-}
-
