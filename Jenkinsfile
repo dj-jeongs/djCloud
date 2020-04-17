@@ -38,7 +38,7 @@ node {
      }
 
      notifySlack("${currentBuild.currentResult}", "#00FF00")
-     } catch(e) {
+     } catch {
 	currentBuild.result = "FAILED"
 	notifySlack("${currentBuild.currentResult}", "#FF0000")
      }
