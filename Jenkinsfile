@@ -1,16 +1,9 @@
-pipeline {
-    agent none
+def notifySlack(STATUS, COLOR) {
+	slackSend (color: COLOR, message: STATUS+" : " +  "${env.JOB_NAME} [${env.BUILD_NUMBER}] (${env.BUILD_URL})")
+}
 
-    environment {
-        SLACK_CHANNEL = '#security'
-    }
+notifySlack("STARTED", "#FFFF00")
 
-    stages {
-        stage('Start') {
-            steps {
-                slackSend (channel: SLACK_CHANNEL, color: '#FFFF00', message: "STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-            }
-        }
 node {
      def app
 
@@ -43,13 +36,11 @@ node {
              app.push("latest")
          }
      }
- }
-    post {
-        success {
-            slackSend (channel: SLACK_CHANNEL, color: '#00FF00', message: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-        failure {
-            slackSend (channel: SLACK_CHANNEL, color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-        }
-    }
+
+     notifySlack("${currentBuild.currentResult}", "#00FF00")
+     } catch(e) {
+	currentBuild.result = "FAILED"
+	notifySlack("${currentBuild.currentResult}", "#FF0000")
+     }
 }
+
